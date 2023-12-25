@@ -29,7 +29,7 @@ func starter(UserInput UserInput) error {
 
 	if UserInput.Input == "" {
 
-		if UserInput.Domain == "" || !isValidDomain(UserInput.Domain) {
+		if UserInput.Domain == "" {
 			return errors.New("Please add a valid domain name")
 		}
 
@@ -60,6 +60,8 @@ func starter(UserInput UserInput) error {
 
 		if len(result) == 0 {
 			color.Redln("No vulnerable urls were detected!")
+		} else {
+			color.Greenln("The vulnerable urls are: ", result)
 		}
 	}
 
@@ -224,24 +226,20 @@ func checkRedirects(url string, ch chan<- string, wg *sync.WaitGroup) {
 	client := new(http.Client)
 
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		return errors.New("Redirect")
+		ch <- url
+		return nil
 	}
 
 	response, err := client.Do(req)
 
 	if err != nil {
-		ch <- ""
-		return
-	}
-
-	if response.StatusCode != http.StatusFound {
+		log.Fatalln(err)
 		ch <- ""
 		return
 	}
 
 	defer response.Body.Close()
 
-	ch <- url
 }
 
 func callUrls(modifiedUrls []string, isXss bool) ([]string, error) {
@@ -344,7 +342,7 @@ func alterUrl(url string, keys []string) []string {
 	*/
 	var testingUrls []string
 	for _, key := range keys {
-		testingUrls = append(testingUrls, "https://"+url+"?"+key+"="+"https://www.google.com/")
+		testingUrls = append(testingUrls, "http://"+url+"?"+key+"="+"https://www.google.com/")
 	}
 
 	return testingUrls

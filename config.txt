@@ -10,7 +10,6 @@ u
 redirect
 end_display
 r
-url
 URL
 location
 returnUrl
