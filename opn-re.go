@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"reflect"
 	"regexp"
 	"strings"
 	"sync"
@@ -30,16 +31,16 @@ func starter(UserInput UserInput) error {
 	if UserInput.Input == "" {
 
 		if UserInput.Domain == "" {
-			return errors.New("Please add a valid domain name")
+			return errors.New("please add a valid domain name")
 		}
 
-		if !UserInput.Single {
+		if !UserInput.Simple {
 			webArchiveUrls := getWebArchiveUrls(UserInput.Domain)
 
 			testingUrls = getTestingUrl(webArchiveUrls)
 
 			if !UserInput.Force {
-				keys := readDefaultKeys("config.txt")
+				keys := readFile("config.txt")
 				testingUrls = filterUrls(testingUrls, keys)
 			}
 
@@ -48,21 +49,26 @@ func starter(UserInput UserInput) error {
 			color.Greenln("Number of links to be scanned:", len(modifiedUrls))
 
 		} else {
-			keys := readDefaultKeys("config.txt")
+			keys := readFile("config.txt")
 			modifiedUrls = alterUrl(UserInput.Domain, keys)
 		}
 
-		result, err := callUrls(modifiedUrls, UserInput.Xss)
+	} else {
+		keys := readFile("config.txt")
+		domains := readFile(UserInput.Input)
+		modifiedUrls = alterUrl(domains, keys)
+	}
 
-		if err != nil {
-			log.Fatal(err)
-		}
+	result, err := callUrls(modifiedUrls, UserInput.Xss)
 
-		if len(result) == 0 {
-			color.Redln("No vulnerable urls were detected!")
-		} else {
-			color.Greenln("The vulnerable urls are: ", result)
-		}
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if len(result) == 0 {
+		color.Redln("No vulnerable urls were detected!")
+	} else {
+		color.Greenln("The vulnerable urls are: ", result)
 	}
 
 	return nil
@@ -173,7 +179,7 @@ func replaceUrls(testingUrls []string, isXss bool) []string {
 	*/
 	var modifiedUrls []string
 	var paramCheck string
-	payloads := readDefaultKeys("open-redirect-payloads.txt")
+	payloads := readFile("open-redirect-payloads.txt")
 
 	for _, url := range testingUrls {
 		queryParams := strings.Split(url, "?")[1]
@@ -333,16 +339,27 @@ func checkXss(url string, ch chan<- string, wg *sync.WaitGroup) {
 
 }
 
-func alterUrl(url string, keys []string) []string {
+func alterUrl(url interface{}, keys []string) []string {
 	/**
-	This method will alter a single URL.
-	@var url string.
+	This method will alter a single or multiple URL.
+	@var url string or []string.
 	@var keys []string.
 	@return []string.
 	*/
 	var testingUrls []string
-	for _, key := range keys {
-		testingUrls = append(testingUrls, "http://"+url+"?"+key+"="+"https://www.google.com/")
+	v := reflect.ValueOf(url)
+
+	switch v.Kind() {
+	case reflect.String:
+		for _, key := range keys {
+			testingUrls = append(testingUrls, "http://"+url.(string)+"?"+key+"="+"https://www.google.com/")
+		}
+	case reflect.Slice:
+		for _, _url := range url.([]string) {
+			for _, key := range keys {
+				testingUrls = append(testingUrls, "http://"+_url+"?"+key+"="+"https://www.google.com/")
+			}
+		}
 	}
 
 	return testingUrls

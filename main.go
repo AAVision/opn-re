@@ -8,12 +8,10 @@ import (
 )
 
 type UserInput struct {
-	Domain string `arg:"-d,required"`
-	J      bool   `arg:"-j"`
+	Domain string `arg:"-d"`
 	Force  bool   `arg:"-f"`
 	Xss    bool   `arg:"-x"`
-	Quiet  bool   `arg:"-q"`
-	Single bool   `arg:"-s"`
+	Simple bool   `arg:"-s"`
 	Input  string `arg:"-i"`
 }
 

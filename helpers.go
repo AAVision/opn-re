@@ -110,7 +110,7 @@ func getRandomString(length int) string {
 	return string(b)
 }
 
-func readDefaultKeys(fileName string) []string {
+func readFile(fileName string) []string {
 	/**
 	This method will get content of any file in the same directory.
 	@var string fileName
