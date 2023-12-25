@@ -28,6 +28,10 @@ func starter(UserInput UserInput) error {
 	var testingUrls []string
 	var modifiedUrls []string
 
+	if (UserInput.Domain == "" && UserInput.Input == "") || (UserInput.Domain != "" && UserInput.Input != "") {
+		return errors.New("please add a domain or input file with domains")
+	}
+
 	if UserInput.Input == "" {
 
 		if UserInput.Domain == "" {

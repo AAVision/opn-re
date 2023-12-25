@@ -10,7 +10,7 @@ An open redirect vulnerability entails an attacker manipulating the user and red
 
 However, open redirect vulnerabilities can help attackers in ways that go far beyond phishing. The true risk of this vulnerability is when it is utilized and combined with Server Side Request Forgery, XSS-Auditor bypass, Oauth Flaw, and so on.
 ![Opn-Re-Example](https://github.com/AAVision/opn-re/blob/da8ab89853889485e3d590d3bdbeaf82c9d31361/images/open-redirect-example.png)
-## Usage
+## General
 ### How to Use this tool?
 First of all, you can create a simple PHP script that redirects by passing the url in the url parameters in the URL, e.g.
 
@@ -26,3 +26,17 @@ if($_GET["url"]){
 ?>
 ```
 Save this script on your XAMPP server and check if it will redirect to the URL provided in the parameters, e.g., `http://localhost/opn-re/?url=https://www.google.com`.
+
+## Usage
+```bash
+go run . --help
+Usage: opn-re.exe [--domain DOMAIN] [--force] [--xss] [--simple] [--input INPUT]
+
+Options:
+  --domain DOMAIN, -d DOMAIN
+  --force, -f
+  --xss, -x
+  --simple, -s
+  --input INPUT, -i INPUT
+  --help, -h             display this help and exit
+```
