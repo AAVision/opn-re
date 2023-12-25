@@ -9,6 +9,7 @@ First of all, the idea of this tool is to find an open redirect vulnerability in
 An open redirect vulnerability entails an attacker manipulating the user and redirecting them from one site to another, which may be malicious. The cybersecurity community doesn’t put enough emphasis on open redirect vulnerabilities because they are considered a simple flaw commonly connected to phishing scams and social engineering.
 
 However, open redirect vulnerabilities can help attackers in ways that go far beyond phishing. The true risk of this vulnerability is when it is utilized and combined with Server Side Request Forgery, XSS-Auditor bypass, Oauth Flaw, and so on.
+---
 ![Opn-Re-Example](https://github.com/AAVision/opn-re/blob/da8ab89853889485e3d590d3bdbeaf82c9d31361/images/open-redirect-example.png)
 ## General
 ### How to Use this tool?
