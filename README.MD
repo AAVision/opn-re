@@ -41,3 +41,69 @@ Options:
   --input INPUT, -i INPUT
   --help, -h             display this help and exit
 ```
+**Parameters:**
+- d (-d or --domain): is the domain that the tool will scan: `google.com`.
+- s (-s or --simple): this key will make a simple scan by embedding the parameter added in the `config.txt` file.
+- f (-f or --force): this key will force to get all archieved urls.
+- i (-i or --input): This key will take the name of the file that contains urls and add its parameters.
+- x (-x or -xss): this key will search for xss injection in the query params.
+- h (-h or --help): this key will display the help menu.
+
+```bash
+    go run . --input test.txt
+
+    go run . --domain google.com --force
+```
+
+```bash
+go run . --domain localhost/opn-re/ --simple
+Scanning: http://localhost/opn-re/?url=https://www.google.com/
+Scanning: http://localhost/opn-re/?file=https://www.google.com/
+Scanning: http://localhost/opn-re/?l=https://www.google.com/
+Scanning: http://localhost/opn-re/?ret=https://www.google.com/
+Scanning: http://localhost/opn-re/?red=https://www.google.com/
+Scanning: http://localhost/opn-re/?page=https://www.google.com/
+Scanning: http://localhost/opn-re/?q=https://www.google.com/
+Scanning: http://localhost/opn-re/?img=https://www.google.com/
+Scanning: http://localhost/opn-re/?path=https://www.google.com/
+Scanning: http://localhost/opn-re/?file=https://www.google.com/
+Scanning: http://localhost/opn-re/?old=https://www.google.com/
+Scanning: http://localhost/opn-re/?back=https://www.google.com/
+Scanning: http://localhost/opn-re/?redirectBack=https://www.google.com/
+Scanning: http://localhost/opn-re/?aspxerrorpath=https://www.google.com/
+Scanning: http://localhost/opn-re/?u=https://www.google.com/
+Scanning: http://localhost/opn-re/?langTo=https://www.google.com/
+Scanning: http://localhost/opn-re/?redirect=https://www.google.com/
+Scanning: http://localhost/opn-re/?From=https://www.google.com/
+Scanning: http://localhost/opn-re/?Goto=https://www.google.com/
+Scanning: http://localhost/opn-re/?end_display=https://www.google.com/
+Scanning: http://localhost/opn-re/?AuthState=https://www.google.com/
+Scanning: http://localhost/opn-re/?forward=https://www.google.com/
+Scanning: http://localhost/opn-re/?redir=https://www.google.com/
+Scanning: http://localhost/opn-re/?page=https://www.google.com/
+Scanning: http://localhost/opn-re/?r=https://www.google.com/
+Scanning: http://localhost/opn-re/?return_url=https://www.google.com/
+Scanning: http://localhost/opn-re/?image_path=https://www.google.com/
+Scanning: http://localhost/opn-re/?URL=https://www.google.com/
+Scanning: http://localhost/opn-re/?location=https://www.google.com/
+Scanning: http://localhost/opn-re/?toredirect=https://www.google.com/
+Scanning: http://localhost/opn-re/?returnUrl=https://www.google.com/
+Scanning: http://localhost/opn-re/?redirect_url=https://www.google.com/
+Scanning: http://localhost/opn-re/?Next=https://www.google.com/
+Scanning: http://localhost/opn-re/?ReturnUrl=https://www.google.com/
+Scanning: http://localhost/opn-re/?uri=https://www.google.com/
+Scanning: http://localhost/opn-re/?open=https://www.google.com/
+Scanning: http://localhost/opn-re/?newurl=https://www.google.com/
+Scanning: http://localhost/opn-re/?Referer=https://www.google.com/
+Scanning: http://localhost/opn-re/?ActionCodeURL=https://www.google.com/
+Scanning: http://localhost/opn-re/?link=https://www.google.com/
+Scanning: http://localhost/opn-re/?r2=https://www.google.com/
+The vulnerable urls are:  [http://localhost/opn-re/?url=https://www.google.com/]
+Finished in: 740.6005ms
+```
+
+
+## LICENSE
+
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/aavision/opn-re/blob/main/LICENSE) file for details.
+

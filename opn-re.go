@@ -13,7 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/briandowns/spinner"
 	"github.com/gookit/color"
 	"golang.org/x/exp/slices"
 )
@@ -87,10 +86,7 @@ func getWebArchiveUrls(domain string) []string {
 	var webArchiveUrls [][]string
 	var results []string
 
-	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	s.Color("yellow", "bold")
-	s.Suffix = " Getting archives..."
-	s.Start()
+	spinner := spinnerStarter(9, "yellow", " Getting archives... ")
 
 	client := &http.Client{}
 
@@ -122,7 +118,7 @@ func getWebArchiveUrls(domain string) []string {
 		log.Fatalln("No Data Found!")
 	}
 
-	s.Stop()
+	spinnerStopper(spinner)
 	color.Greenln("✔️")
 
 	createFile("archive_"+domain+"_"+getRandomString(5)+".txt", string(body))

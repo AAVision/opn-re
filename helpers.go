@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"runtime"
 	"time"
+
+	"github.com/briandowns/spinner"
 )
 
 func getUserAgents() string {
@@ -134,4 +136,28 @@ func readFile(fileName string) []string {
 	}
 
 	return data
+}
+
+func spinnerStarter(spinnerNumber int, color string, suffix string) *spinner.Spinner {
+	/**
+	This method will generate a spinner.
+	@var spinnerNumber int
+	@var color string
+	@var suffix string
+	@return *spinner.Spinner
+	*/
+	s := spinner.New(spinner.CharSets[spinnerNumber], 100*time.Millisecond)
+	s.Color(color, "bold")
+	s.Suffix = suffix
+	s.Start()
+	return s
+}
+
+func spinnerStopper(s *spinner.Spinner) {
+	/**
+	This method will stop a spinner.
+	@var s *spinner.Spinner
+	@return nil
+	*/
+	s.Stop()
 }
