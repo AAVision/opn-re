@@ -55,6 +55,8 @@ Options:
 go run . --input test.txt
 
 go run . --domain google.com --force
+
+go run . --domain localhost/opn-re/ --simple --verbose
 ```
 
 ```bash
