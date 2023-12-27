@@ -30,8 +30,8 @@ Save this script on your XAMPP server and check if it will redirect to the URL p
 
 ## Usage
 ```bash
-go run . --help
-Usage: opn-re.exe [--domain DOMAIN] [--force] [--xss] [--simple] [--input INPUT]
+go run . --help                                       
+Usage: opn-re.exe [--domain DOMAIN] [--force] [--xss] [--simple] [--input INPUT] [--verbose]
 
 Options:
   --domain DOMAIN, -d DOMAIN
@@ -39,6 +39,7 @@ Options:
   --xss, -x
   --simple, -s
   --input INPUT, -i INPUT
+  --verbose, -v
   --help, -h             display this help and exit
 ```
 **Parameters:**
