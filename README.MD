@@ -50,9 +50,9 @@ Options:
 - h (-h or --help): this key will display the help menu.
 
 ```bash
-    go run . --input test.txt
+go run . --input test.txt
 
-    go run . --domain google.com --force
+go run . --domain google.com --force
 ```
 
 ```bash
@@ -101,7 +101,6 @@ Scanning: http://localhost/opn-re/?r2=https://www.google.com/
 The vulnerable urls are:  [http://localhost/opn-re/?url=https://www.google.com/]
 Finished in: 740.6005ms
 ```
-
 
 ## LICENSE
 
