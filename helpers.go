@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/briandowns/spinner"
+	"github.com/chelnak/ysmrr"
 )
 
 func getUserAgents() string {
@@ -138,26 +138,21 @@ func readFile(fileName string) []string {
 	return data
 }
 
-func spinnerStarter(spinnerNumber int, color string, suffix string) *spinner.Spinner {
+func spinnerAdder(spinner ysmrr.SpinnerManager, name string) *ysmrr.Spinner {
 	/**
 	This method will generate a spinner.
-	@var spinnerNumber int
-	@var color string
-	@var suffix string
-	@return *spinner.Spinner
+	@var spinner ysmrr.SpinnerManager,
+	@var name string
+	@return *ysmrr.Spinner
 	*/
-	s := spinner.New(spinner.CharSets[spinnerNumber], 100*time.Millisecond)
-	s.Color(color, "bold")
-	s.Suffix = suffix
-	s.Start()
-	return s
+	return spinner.AddSpinner(name)
 }
 
-func spinnerStopper(s *spinner.Spinner) {
+func spinnerStopper(s *ysmrr.Spinner) {
 	/**
 	This method will stop a spinner.
 	@var s *spinner.Spinner
 	@return nil
 	*/
-	s.Stop()
+	s.Complete()
 }

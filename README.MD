@@ -46,6 +46,7 @@ Options:
 - s (-s or --simple): this key will make a simple scan by embedding the parameter added in the `config.txt` file.
 - f (-f or --force): this key will force to get all archieved urls.
 - i (-i or --input): This key will take the name of the file that contains urls and add its parameters.
+- v (-v or --verbose): This key will show all the processes and the urls scanned.
 - x (-x or -xss): this key will search for xss injection in the query params.
 - h (-h or --help): this key will display the help menu.
 

@@ -8,11 +8,12 @@ import (
 )
 
 type UserInput struct {
-	Domain string `arg:"-d"`
-	Force  bool   `arg:"-f"`
-	Xss    bool   `arg:"-x"`
-	Simple bool   `arg:"-s"`
-	Input  string `arg:"-i"`
+	Domain  string `arg:"-d"`
+	Force   bool   `arg:"-f"`
+	Xss     bool   `arg:"-x"`
+	Simple  bool   `arg:"-s"`
+	Input   string `arg:"-i"`
+	Verbose bool   `arg:"-v"`
 }
 
 func main() {

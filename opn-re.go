@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/chelnak/ysmrr"
 	"github.com/gookit/color"
 	"golang.org/x/exp/slices"
 )
@@ -31,6 +32,12 @@ func starter(UserInput UserInput) error {
 		return errors.New("please add a domain or input file with domains")
 	}
 
+	sm := ysmrr.NewSpinnerManager()
+
+	mainSpinner := spinnerAdder(sm, "Processing...")
+
+	sm.Start()
+
 	if UserInput.Input == "" {
 
 		if UserInput.Domain == "" {
@@ -38,35 +45,51 @@ func starter(UserInput UserInput) error {
 		}
 
 		if !UserInput.Simple {
-			webArchiveUrls := getWebArchiveUrls(UserInput.Domain)
 
+			archiveSpinner := spinnerAdder(sm, "Getting Archives...")
+			webArchiveUrls := getWebArchiveUrls(UserInput.Domain)
+			spinnerStopper(archiveSpinner)
+
+			parsingSpinner := sm.AddSpinner("Parsing...")
 			testingUrls = getTestingUrl(webArchiveUrls)
+			spinnerStopper(parsingSpinner)
 
 			if !UserInput.Force {
+				filteringSpinner := spinnerAdder(sm, "Filtering...")
 				keys := readFile("config.txt")
 				testingUrls = filterUrls(testingUrls, keys)
+				spinnerStopper(filteringSpinner)
 			}
 
+			replacingSpinner := spinnerAdder(sm, "Building URLs...")
 			modifiedUrls = replaceUrls(testingUrls, UserInput.Xss)
+			spinnerStopper(replacingSpinner)
 
 			color.Greenln("Number of links to be scanned:", len(modifiedUrls))
 
 		} else {
+			replacingSpinner := spinnerAdder(sm, "Building URLs...")
 			keys := readFile("config.txt")
 			modifiedUrls = alterUrl(UserInput.Domain, keys)
+			spinnerStopper(replacingSpinner)
 		}
 
 	} else {
+		replacingSpinner := spinnerAdder(sm, "Building URLs...")
 		keys := readFile("config.txt")
 		domains := readFile(UserInput.Input)
 		modifiedUrls = alterUrl(domains, keys)
+		spinnerStopper(replacingSpinner)
 	}
 
-	result, err := callUrls(modifiedUrls, UserInput.Xss)
+	result, err := callUrls(modifiedUrls, UserInput.Xss, UserInput.Verbose)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	spinnerStopper(mainSpinner)
+	sm.Stop()
 
 	if len(result) == 0 {
 		color.Redln("No vulnerable urls were detected!")
@@ -85,8 +108,6 @@ func getWebArchiveUrls(domain string) []string {
 	*/
 	var webArchiveUrls [][]string
 	var results []string
-
-	spinner := spinnerStarter(9, "yellow", " Getting archives... ")
 
 	client := &http.Client{}
 
@@ -117,9 +138,6 @@ func getWebArchiveUrls(domain string) []string {
 	if err != nil {
 		log.Fatalln("No Data Found!")
 	}
-
-	spinnerStopper(spinner)
-	color.Greenln("✔️")
 
 	createFile("archive_"+domain+"_"+getRandomString(5)+".txt", string(body))
 
@@ -205,7 +223,7 @@ func replaceUrls(testingUrls []string, isXss bool) []string {
 	return modifiedUrls
 }
 
-func checkRedirects(url string, ch chan<- string, wg *sync.WaitGroup) {
+func checkRedirects(url string, ch chan<- string, wg *sync.WaitGroup, verbose bool) {
 	/**
 	This method will call modified urls async in channels and check for 302 redirect.
 	@var url string.
@@ -215,7 +233,9 @@ func checkRedirects(url string, ch chan<- string, wg *sync.WaitGroup) {
 	*/
 	defer wg.Done()
 
-	color.Grayln("Scanning:", url)
+	if verbose {
+		color.Grayln("Scanning:", url)
+	}
 
 	req, err := http.NewRequest("GET", url, nil)
 
@@ -248,7 +268,7 @@ func checkRedirects(url string, ch chan<- string, wg *sync.WaitGroup) {
 
 }
 
-func callUrls(modifiedUrls []string, isXss bool) ([]string, error) {
+func callUrls(modifiedUrls []string, isXss bool, verbose bool) ([]string, error) {
 	/**
 	This method will call all URLs.
 	@var modifiedUrls []string.
@@ -264,9 +284,9 @@ func callUrls(modifiedUrls []string, isXss bool) ([]string, error) {
 	for _, modifiedUrl = range modifiedUrls {
 		wg.Add(1)
 		if !isXss {
-			go checkRedirects(modifiedUrl, ch, &wg)
+			go checkRedirects(modifiedUrl, ch, &wg, verbose)
 		} else {
-			go checkXss(modifiedUrl, ch, &wg)
+			go checkXss(modifiedUrl, ch, &wg, verbose)
 		}
 
 	}
@@ -285,7 +305,7 @@ func callUrls(modifiedUrls []string, isXss bool) ([]string, error) {
 	return responses, nil
 }
 
-func checkXss(url string, ch chan<- string, wg *sync.WaitGroup) {
+func checkXss(url string, ch chan<- string, wg *sync.WaitGroup, verbose bool) {
 	/**
 	This method will check if the url is vulernable to XSS.
 	@var url string.
@@ -295,7 +315,9 @@ func checkXss(url string, ch chan<- string, wg *sync.WaitGroup) {
 	*/
 	defer wg.Done()
 
-	color.Grayln("Scanning:", url)
+	if verbose {
+		color.Grayln("Scanning:", url)
+	}
 
 	client := &http.Client{}
 
