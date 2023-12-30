@@ -105,7 +105,13 @@ Scanning: http://localhost/opn-re/?r2=https://www.google.com/
 The vulnerable urls are:  [http://localhost/opn-re/?url=https://www.google.com/]
 Finished in: 740.6005ms
 ```
+---
 
+## Build
+'''bash
+go build .
+./opn-re
+'''
 ## LICENSE
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/aavision/opn-re/blob/main/LICENSE) file for details.
