@@ -108,10 +108,10 @@ Finished in: 740.6005ms
 ---
 
 ## Build
-'''bash
+```bash
 go build .
 ./opn-re
-'''
+```
 ## LICENSE
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/aavision/opn-re/blob/main/LICENSE) file for details.
